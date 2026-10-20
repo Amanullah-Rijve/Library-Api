@@ -2,6 +2,7 @@ import jwt  from "jsonwebtoken";
 import User  from '../models/user.model.js'
 
 
+
 export const protect = async (req,res,next)=>{
     try {
         const authHeader = req.headers.authorization
@@ -20,6 +21,16 @@ export const protect = async (req,res,next)=>{
         next()
     } catch (error) {
         next(error)
+    }
+}
+
+export const restrictTo = (...roles)=>{
+    return (req,res,next)=>{
+        const user = req.user.role
+        if(!user){
+            return res.status(403).json({success: false, message: 'user not found'})
+        }
+        next()
     }
 }
 
