@@ -2,6 +2,8 @@ import express from 'express'
 import dotenv from 'dotenv'
 import helmet from 'helmet'
 import connectDB from './config/db.js'
+import authRoute from './routes/auth.routes.js'
+
 
 dotenv.config()
 
@@ -13,6 +15,9 @@ connectDB()
 // middleware
 app.use(helmet())
 app.use(express.json({limit: '10kb'}))
+
+// routes
+app.use('/api/auth',authRoute)
 
 // 404
 app.use((req,res)=>{

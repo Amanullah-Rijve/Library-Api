@@ -3,7 +3,7 @@ import jwt from 'jsonwebtoken'
 import {body,validationResult} from 'express-validator'
 import rateLimit from 'express-rate-limit'
 import User from '../models/user.model.js'
-import {protect,restrictTo} from '../middleware/auth.middleware.js'
+import {protect} from '../middleware/auth.middleware.js'
 
 
 const router = Router()
@@ -83,7 +83,7 @@ router.post('/signup', signupLimiter,
     router.post('/login',loginLimiter,
         [
         body('email').isEmail().withMessage('give correct email'),
-        body('password').notEmpty().withMessage("giv correct password")
+        body('password').notEmpty().withMessage("give correct password")
         ],
         async(req,res,next)=>{
         try {
@@ -98,13 +98,13 @@ router.post('/signup', signupLimiter,
         const isUser = await User.findOne({email}).select('+password')
         // validation
         if(!isUser){
-        return res.status(401).json({success: false,message: 'user not found'})
+        return res.status(401).json({success: false,message: 'invalid email or password'})
         }
       // match password
         const isMatched = await isUser.comparePassword(password)
         // password validation
         if(!isMatched){
-            return res.status(401).json({success: false,message: 'wrond password'})
+            return res.status(401).json({success: false,message: 'invalid email or password'})
         }
         // token
         const token = generateToken(isUser.id)

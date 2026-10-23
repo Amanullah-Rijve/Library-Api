@@ -26,9 +26,9 @@ export const protect = async (req,res,next)=>{
 
 export const restrictTo = (...roles)=>{
     return (req,res,next)=>{
-        const user = req.user.role
-        if(!user){
-            return res.status(403).json({success: false, message: 'user not found'})
+        const hasrole = roles.includes(req.user.role)
+        if(!hasrole){
+            return res.status(403).json({success: false, message: 'user forbidden'})
         }
         next()
     }
